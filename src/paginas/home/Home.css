@@ -1,12 +1,17 @@
-
-.titulo{
-    color: blue;
-    text-align: center;
+.fundoLogin2 {
+    background-image: url('https://i.imgur.com/903UMqb.jpg');
+    min-height: 100vh;
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
-.img{
-    width: 500px;
-    height: 500px;
-    display: block;
-    margin: 0 auto;
+.botao {
+    background-color: #93968d !important;
+}
+
+.botao:hover {
+    background-color: #4b4d47 !important;
+    color: white !important;
 }

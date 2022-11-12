@@ -1,0 +1,14 @@
+.text-decorator-none {
+    text-decoration: none;
+    color: #fff !important;
+}
+
+.menu {
+    font-size: 15px;
+    color: #fff !important;
+}
+
+.login {
+    color: #fff !important;
+    margin-right: 30px !important;
+}
