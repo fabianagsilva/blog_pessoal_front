@@ -1,19 +1,22 @@
 import { Button } from "@material-ui/core";
 import { Box, Grid, TextField, Typography } from "@mui/material";
-import React, { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import useLocalStorage from "react-use-localstorage";
+import UsuarioLogin from "../../models/UsuarioLogin";
 import { login } from "../../service/Service";
-import UserLogin from "../../models/UserLogin";
+import { addToken } from "../../store/tokens/actions";
 import "./Login.css";
 
 function Login() {
 
     let history = useNavigate();
 
-    const [token, setToken] = useLocalStorage('token');
+    const dispatch = useDispatch();
 
-    const [userLogin, setUserLogin] = useState<UserLogin>(
+    const [token, setToken] = useState('token');
+
+    const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(
         {
             id: 0,
             nome: '',
@@ -25,14 +28,15 @@ function Login() {
     )
 
     function updatedModel(e: ChangeEvent<HTMLInputElement>) {
-        setUserLogin({
-            ...userLogin,
+        setUsuarioLogin({
+            ...usuarioLogin,
             [e.target.name]: e.target.value
         })
     }
 
     useEffect(() => {
         if (token !== '') {
+            dispatch(addToken(token));
             history('/home');
         }
     }, [token]);
@@ -40,7 +44,7 @@ function Login() {
     async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
-            await login(`/usuarios/logar`, userLogin, setToken)
+            await login(`/usuarios/logar`, usuarioLogin, setToken)
         } catch (error) {
             alert('Usuário não encontrado. Tente novamente!');
         }
@@ -54,8 +58,8 @@ function Login() {
                     <Box padding={20}>
                         <form onSubmit={onSubmit}>
                             <Typography variant="h3" gutterBottom color='textPrimary' component='h3' align='center' className="textos">Login</Typography>
-                            <TextField value={userLogin.usuario} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="usuario" variant="outlined" label='Usuário (e-mail)' name='usuario' fullWidth margin="normal" />
-                            <TextField value={userLogin.senha} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="senha" variant="outlined" label='Senha' name='senha' type='password' fullWidth margin="normal" />
+                            <TextField value={usuarioLogin.usuario} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="usuario" variant="outlined" label='Usuário (e-mail)' name='usuario' fullWidth margin="normal" />
+                            <TextField value={usuarioLogin.senha} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="senha" variant="outlined" label='Senha' name='senha' type='password' fullWidth margin="normal" />
                             <Box marginBottom={2} textAlign='center'>
                                 <Button type="submit" variant="contained" className="logar">Logar</Button>
                             </Box>

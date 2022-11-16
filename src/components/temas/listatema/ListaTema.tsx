@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Card, CardActions, CardContent, Button, Typography } from '@material-ui/core';
-import './ListaTema.css';
+import { Button, Card, CardActions, CardContent, Typography } from '@material-ui/core';
 import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import Tema from '../../../models/Tema';
-import useLocalStorage from 'react-use-localstorage';
 import { busca } from '../../../service/Service';
+import { TokenState } from '../../../store/tokens/tokensReducer';
+import './ListaTema.css';
 
 function ListaTema() {
 
-  //const para armazenar temas do backend
   const [temas, setTemas] = useState<Tema[]>([])
 
-  //const para acessar o token
-  const [token, setToken] = useLocalStorage('token');
+  const token = useSelector<TokenState, TokenState["tokens"]>(
+    (state) => state.tokens
+  );
 
   let navigate = useNavigate();
 
-  useEffect(()=>{
-    if(token == ''){
+  useEffect(() => {
+    if (token == '') {
       alert("Você precisa estar logado")
       navigate("/login")
     }
   }, [token])
 
-  //solicita os temas do backend
   async function buscaTema() {
     await busca('/temas', setTemas, {
       headers: {
@@ -33,14 +33,12 @@ function ListaTema() {
     })
   }
 
-  //roda assim que a tela for aberta pelo user
   useEffect(() => {
     buscaTema()
   }, [temas.length])
 
   return (
     <>
-      {/*percorre o array de temas e gera um card para cada tema adicionado*/}
       {temas.map((tema) => (<Box m={2} >
         <Card variant="outlined">
           <CardContent>
@@ -76,6 +74,5 @@ function ListaTema() {
     </>
   );
 }
-
 
 export default ListaTema;

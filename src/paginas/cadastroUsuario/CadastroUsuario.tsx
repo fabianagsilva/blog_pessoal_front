@@ -1,17 +1,17 @@
-import { Grid, Box, Typography, Button, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import "./CadastroUsuario.css";
-import User from "../../models/User";
+import Usuario from "../../models/Usuario";
 import { cadastroUsuario } from "../../service/Service";
+import "./CadastroUsuario.css";
 
 function CadastroUsuario() {
 
   let history = useNavigate();
 
   const [confirmarSenha, setConfirmarSenha] = useState<String>("");
-  
-  const [user, setUser] = useState<User>({
+
+  const [usuario, setUsuario] = useState<Usuario>({
     id: 0,
     nome: "",
     usuario: "",
@@ -19,7 +19,7 @@ function CadastroUsuario() {
     foto: "",
   });
 
-  const [userResult, setUserResult] = useState<User>({
+  const [usuarioResult, setUsuarioResult] = useState<Usuario>({
     id: 0,
     nome: "",
     usuario: "",
@@ -28,27 +28,27 @@ function CadastroUsuario() {
   });
 
   useEffect(() => {
-    if (userResult.id != 0) {
+    if (usuarioResult.id != 0) {
       history("/login");
     }
-  }, [userResult]);
+  }, [usuarioResult]);
 
   function confirmarSenhaHandle(e: ChangeEvent<HTMLInputElement>) {
     setConfirmarSenha(e.target.value);
   }
 
   function updateModel(e: ChangeEvent<HTMLInputElement>) {
-    setUser({
-      ...user,
+    setUsuario({
+      ...usuario,
       [e.target.name]: e.target.value,
     });
   }
   async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(user)
-    if (confirmarSenha === user.senha && user.senha.length >= 8) {
+    console.log(usuario)
+    if (confirmarSenha === usuario.senha && usuario.senha.length >= 8) {
       try {
-        await cadastroUsuario('/usuarios/cadastrar', user, setUserResult);
+        await cadastroUsuario('/usuarios/cadastrar', usuario, setUsuarioResult);
         alert('Usuário cadastrado com sucesso');
       } catch (error) {
         alert('Falha no servidor');
@@ -56,7 +56,7 @@ function CadastroUsuario() {
     } else {
       alert('As senhas não conferem. Verificar novamente');
 
-      setUser({ ...user, senha: ''});
+      setUsuario({ ...usuario, senha: '' });
       setConfirmarSenha('')
     }
   }
@@ -78,7 +78,7 @@ function CadastroUsuario() {
               Cadastrar
             </Typography>
             <TextField
-              value={user.nome}
+              value={usuario.nome}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateModel(event)
               }
@@ -90,7 +90,7 @@ function CadastroUsuario() {
               margin="normal"
             />
             <TextField
-              value={user.usuario}
+              value={usuario.usuario}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateModel(event)
               }
@@ -102,7 +102,7 @@ function CadastroUsuario() {
               margin="normal"
             />
             <TextField
-              value={user.senha}
+              value={usuario.senha}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 updateModel(event)
               }
@@ -138,7 +138,7 @@ function CadastroUsuario() {
                 </Button>
               </Link>
               <Button type="submit" variant="contained" color="primary"
-              className="btnCadastrar">
+                className="btnCadastrar">
                 Cadastrar
               </Button>
             </Box>
